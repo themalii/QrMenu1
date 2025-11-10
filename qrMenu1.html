@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cowboy's Burger QR Menü</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rye&family=Roboto:wght@400;700&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: url('ornek.png') center/cover no-repeat fixed;
+    color: #fff;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  /* HEADER */
+  header {
+    background: rgba(40, 20, 5, 0.9);
+    text-align: center;
+    padding: 20px 10px;
+    border-bottom: 3px solid #f4b942;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    width: 100%;
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 100;
+  }
+
+  header img {
+    height: 70px;
+    max-width: 90%;
+    border-radius: 10px;
+  }
+
+  h1 {
+    font-family: 'Rye', cursive;
+    font-size: 2rem;
+    margin: 10px 0 0 0;
+    color: #f4b942;
+    letter-spacing: 2px;
+  }
+
+  /* NAV BAR */
+  nav {
+    background: rgba(20, 10, 0, 0.95);
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; /* küçük ekranlarda alt satıra geçsin */
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 101;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    border-bottom: 2px solid #f4b942;
+  }
+
+  nav a {
+    color: #f4b942;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin: 2px; /* küçük ekranlarda boşluk */
+  }
+
+  nav a:hover, nav a.active {
+    background: #f4b942;
+    color: #2b1605;
+  }
+
+  section {
+    padding: 40px 10px 80px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  section h2 {
+    font-family: 'Rye', cursive;
+    font-size: 1.8rem;
+    color: #ffcc00;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+  }
+
+  .menu-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 0 10px;
+  }
+
+  .menu-item {
+    background: #b07a4b;
+    border: 1px solid #f4b942;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+  }
+
+  .menu-item:hover {
+    transform: translateY(-5px);
+    background: #a06f41;
+    border-color: #ffcc00;
+  }
+
+  .menu-item img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .menu-item h3 {
+    margin: 12px 0 5px;
+    color: #f4b942;
+    font-family: 'Rye', cursive;
+    font-size: 1.2rem;
+  }
+
+  .menu-item p {
+    font-size: 0.9rem;
+    color: #f9f9f9;
+    margin: 0 10px 5px;
+  }
+
+  .price {
+    font-size: 1rem;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+
+  footer {
+    background: rgba(40, 20, 5, 0.9);
+    color: #ccc;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.8rem;
+    border-top: 2px solid #f4b942;
+  }
+
+  /* Yukarı dön butonu */
+  #topBtn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 200;
+    font-size: 1.5rem;
+    background-color: #f4b942;
+    color: #2b1605;
+    border: none;
+    border-radius: 50%;
+    padding: 10px 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    transition: all 0.3s;
+  }
+
+  #topBtn:hover {
+    background-color: #ffcc00;
+  }
+
+  /* Responsive Ayarlar */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    section h2 {
+      font-size: 1.5rem;
+    }
+
+    .menu-item h3 {
+      font-size: 1rem;
+    }
+
+    .menu-item p {
+      font-size: 0.85rem;
+    }
+
+    nav a {
+      font-size: 0.9rem;
+      padding: 4px 8px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    section {
+      padding: 30px 5px 60px;
+    }
+
+    .menu-item {
+      padding: 8px;
+    }
+
+    .menu-item img {
+      max-height: 150px;
+    }
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('nav a');
+  const header = document.querySelector('header');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+
+    // Header gizle/göster
+    if (currentScroll > lastScroll && currentScroll > 50) {
+      header.style.transform = 'translateY(-100%)';
+    } else {
+      header.style.transform = 'translateY(0)';
+    }
+    lastScroll = currentScroll;
+
+    // Nav active link
+    let current = '';
+    document.querySelectorAll('section').forEach(section => {
+      const sectionTop = section.offsetTop - 120;
+      if (pageYOffset >= sectionTop) current = section.getAttribute('id');
+    });
+    links.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href').includes(current)) link.classList.add('active');
+    });
+
+    // Yukarı dön butonu
+    const topBtn = document.getElementById("topBtn");
+    if (currentScroll > 300) topBtn.style.display = "block";
+    else topBtn.style.display = "none";
+  });
+
+  document.getElementById("topBtn").addEventListener("click", () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+});
+</script>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Cowboy's Burger Logo">
+  <h1>Cowboy's Burger Menü</h1>
+</header>
+
+<nav>
+  <a href="#menuler">Menüler</a>
+  <a href="#burgerler">Burgerler</a>
+  <a href="#yan">Yan Lezzetler</a>
+  <a href="#tatlilar">Tatlılar</a>
+  <a href="#icecekler">İçecekler</a>
+</nav>
+
+<!-- Menü bölümleri (örnek: Menüler) -->
+<section id="menuler">
+  <h2>Menüler</h2>
+  <div class="menu-items">
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Menu Item">
+      <h3>Classic Menü</h3>
+      <p>Burger, patates ve içecek dahil.</p>
+      <div class="price">₺280</div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Menu Item">
+      <h3>Double Menü</h3>
+      <p>İki kat lezzet! Çift köfte, patates ve içecek dahil.</p>
+      <div class="price">₺320</div>
+    </div>
+  </div>
+</section>
+
+<!-- Diğer bölümler: burgerler, yan lezzetler, tatlılar, içecekler -->
+<section id="burgerler">
+  <h2>Burgerler</h2>
+  <div class="menu-items">
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Burger">
+      <h3>Texas Burger</h3>
+      <p>Çift köfte, cheddar, jalapeno ve özel cowboy sosu.</p>
+      <div class="price">₺240</div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Burger">
+      <h3>Smoky BBQ Burger</h3>
+      <p>Dumanlı barbekü sosu ve karamelize soğan ile enfes tat.</p>
+      <div class="price">₺250</div>
+    </div>
+  </div>
+</section>
+
+<section id="yan">
+  <h2>Yan Lezzetler</h2>
+  <div class="menu-items">
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Yan Ürün">
+      <h3>Patates Kızartması</h3>
+      <p>Özel baharat karışımıyla kızartılmış çıtır patatesler.</p>
+      <div class="price">₺80</div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Yan Ürün">
+      <h3>Soğan Halkası</h3>
+      <p>Altın sarısı kızartılmış, çıtır çıtır soğan halkaları.</p>
+      <div class="price">₺85</div>
+    </div>
+  </div>
+</section>
+
+<section id="tatlilar">
+  <h2>Tatlılar</h2>
+  <div class="menu-items">
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Tatlı">
+      <h3>Brownie</h3>
+      <p>Yoğun çikolatalı brownie, vanilya dondurma ile servis edilir.</p>
+      <div class="price">₺90</div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="Tatlı">
+      <h3>Cheesecake</h3>
+      <p>Yumuşacık kıvamıyla klasik New York usulü cheesecake.</p>
+      <div class="price">₺95</div>
+    </div>
+  </div>
+</section>
+
+<section id="icecekler">
+  <h2>İçecekler</h2>
+  <div class="menu-items">
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="İçecek">
+      <h3>Kola</h3>
+      <p>Serinletici gazlı içecek.</p>
+      <div class="price">₺50</div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80" alt="İçecek">
+      <h3>Limonata</h3>
+      <p>Ev yapımı ferahlatıcı limonata.</p>
+      <div class="price">₺60</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2025 Cowboy's Burger | Western Lezzet Deneyimi
+</footer>
+
+<button id="topBtn" title="En üste git">↑</button>
+
+</body>
+</html>
